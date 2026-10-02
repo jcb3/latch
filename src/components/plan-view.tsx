@@ -208,7 +208,11 @@ export function PlanView() {
                             {task.id === "list-30" ? (
                               <span className="mt-2 block text-sm text-foreground">
                                 {state.leads.length}{" "}
-                                {state.leads.length === 1 ? "name is" : "names are"} in the pipeline.
+                                {state.leads.length === 1 ? "name is" : "names are"} in the pipeline.{" "}
+                                <Link href="/calls" className="text-primary underline underline-offset-4">
+                                  The Youngsville call list
+                                </Link>{" "}
+                                is the first set, already checked.
                               </span>
                             ) : null}
                           </span>

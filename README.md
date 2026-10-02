@@ -23,6 +23,7 @@ npm run lint
 - **Plan** — the sequence from “read your employment agreement” through the first paid client, a repeatable delivery, and a clean resignation.
 - **Numbers** — a quit number from your expenses, health insurance, and retirement, plus the revenue the studio has to collect after a tax buffer. The figures start as an example. Replace them.
 - **Clients** — one offer, three packages, a first outreach note, and the list of businesses you are going to contact.
+- **Calls** — a Youngsville, Louisiana list built by opening the websites on the city business directory and writing down one specific fault.
 
 ## The gates
 
