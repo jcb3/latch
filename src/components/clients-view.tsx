@@ -1,6 +1,5 @@
 "use client"
 
-import { LoadingBlock } from "@/components/loading-block"
 import { NumberField } from "@/components/number-field"
 import { useStudio } from "@/components/studio-provider"
 import { Button } from "@/components/ui/button"
@@ -30,8 +29,7 @@ const emptyLead = {
 }
 
 export function ClientsView() {
-  const { ready, state, setPositioning, setPackage, addLead, updateLead, removeLead } =
-    useStudio()
+  const { state, setPositioning, setPackage, addLead, updateLead, removeLead } = useStudio()
   const [draft, setDraft] = useState(emptyLead)
   const [formError, setFormError] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
@@ -40,8 +38,6 @@ export function ClientsView() {
   const signed = state.leads.filter((lead) => lead.stage === "won")
   const proposed = state.leads.filter((lead) => lead.stage === "proposal" || lead.stage === "won")
   const pipelineValue = proposed.reduce((sum, lead) => sum + lead.value, 0)
-
-  if (!ready) return <LoadingBlock label="Opening your clients…" />
 
   const example = state.niche === defaultNiche && state.offer === defaultOffer
 
@@ -218,7 +214,7 @@ export function ClientsView() {
             The list
           </h2>
           <p className="text-sm text-muted-foreground">
-            {state.leads.length} names · {signed.length} signed · {money(pipelineValue)} in play
+            {state.leads.length} {state.leads.length === 1 ? "name" : "names"} · {signed.length} signed · {money(pipelineValue)} in play
           </p>
         </div>
 

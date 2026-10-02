@@ -18,7 +18,6 @@ type Snapshot = {
 }
 
 type StudioContextValue = {
-  ready: boolean
   storageError: string | null
   state: StudioState
   setNumbers: (patch: Partial<Numbers>) => void
@@ -73,10 +72,6 @@ function getServerSnapshot() {
   return serverSnapshot
 }
 
-function subscribeReady() {
-  return () => {}
-}
-
 function write(next: StudioState, storageError = snapshot.storageError) {
   let error = storageError
   try {
@@ -121,11 +116,9 @@ function sanitizeNumbers(patch: Partial<Numbers>): Partial<Numbers> {
 
 export function StudioProvider({ children }: { children: ReactNode }) {
   const snap = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-  const ready = useSyncExternalStore(subscribeReady, () => true, () => false)
 
   const value = useMemo<StudioContextValue>(
     () => ({
-      ready,
       storageError: snap.storageError,
       state: snap.state,
       setNumbers: (patch) => {
@@ -192,7 +185,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
         write(defaultState, null)
       },
     }),
-    [ready, snap],
+    [snap],
   )
 
   return <StudioContext.Provider value={value}>{children}</StudioContext.Provider>

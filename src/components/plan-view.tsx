@@ -1,7 +1,6 @@
 "use client"
 
 import { GateList } from "@/components/gate-list"
-import { LoadingBlock } from "@/components/loading-block"
 import { useStudio } from "@/components/studio-provider"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,14 +14,12 @@ import Link from "next/link"
 import { useMemo, useState } from "react"
 
 export function PlanView() {
-  const { ready, state, toggleTask } = useStudio()
+  const { state, toggleTask } = useStudio()
   const [remainingOnly, setRemainingOnly] = useState(false)
   const math = useMemo(
     () => compute(state.numbers, Boolean(state.checked.coverage)),
     [state.checked.coverage, state.numbers],
   )
-
-  if (!ready) return <LoadingBlock label="Opening your plan…" />
 
   const done = allTasks.filter((task) => state.checked[task.id]).length
   const next = allTasks.find((task) => !state.checked[task.id])

@@ -1,7 +1,6 @@
 "use client"
 
 import { GateList } from "@/components/gate-list"
-import { LoadingBlock } from "@/components/loading-block"
 import { NumberField } from "@/components/number-field"
 import { useStudio } from "@/components/studio-provider"
 import { Button } from "@/components/ui/button"
@@ -16,14 +15,12 @@ import { useMemo } from "react"
 const months = ["Two months ago", "Last month", "This month"] as const
 
 export function NumbersView() {
-  const { ready, state, setNumbers } = useStudio()
+  const { state, setNumbers } = useStudio()
   const math = useMemo(
     () => compute(state.numbers, Boolean(state.checked.coverage)),
     [state.checked.coverage, state.numbers],
   )
   const lines = useMemo(() => storyLines(math, state.numbers), [math, state.numbers])
-
-  if (!ready) return <LoadingBlock label="Opening your numbers…" />
 
   const numbers = state.numbers
   const example = numbersMatchDefault(numbers)
