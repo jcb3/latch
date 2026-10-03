@@ -16,7 +16,23 @@ Open [http://localhost:3847](http://localhost:3847).
 ```bash
 npm test
 npm run lint
+npm run build
 ```
+
+`npm run build` writes a static site to `out/`. Each browser keeps its own plan in local storage.
+
+## GitHub Pages
+
+The site publishes from a public GitHub repository on every push to `main`. The workflow is `.github/workflows/pages.yml`. A repository named `<user>.github.io` is served at `https://<user>.github.io/`. Any other name is served at `https://<user>.github.io/<repo>/`.
+
+This environment cannot sign in as jaycb1978@gmail.com. After that GitHub account exists, run this from WSL:
+
+```bash
+gh auth login
+bash scripts/publish-github-pages.sh
+```
+
+The script creates a public repo named `latch` (pass another lowercase name as the first argument), turns on Pages from GitHub Actions, and pushes `main`. The live URL prints when the push succeeds. The first visit works after the Pages workflow on GitHub turns green.
 
 ## What’s inside
 

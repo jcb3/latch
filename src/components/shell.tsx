@@ -32,7 +32,8 @@ export function Shell({ children }: { children: ReactNode }) {
           </Link>
           <nav aria-label="Sections" className="flex items-center gap-1">
             {links.map((link) => {
-              const active = pathname === link.href
+              const path = pathname.replace(/\/$/, "") || "/"
+              const active = path === link.href
               return (
                 <Link
                   key={link.href}
