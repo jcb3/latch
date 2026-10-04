@@ -11,7 +11,7 @@ if ! command -v gh >/dev/null 2>&1; then
 fi
 
 if ! gh auth status >/dev/null 2>&1; then
-  echo "Sign in with the GitHub account for jaycb1978@gmail.com, then run this again:" >&2
+  echo "Sign in with the GitHub account that owns Latch, then run this again:" >&2
   echo "  gh auth login" >&2
   exit 1
 fi
@@ -45,7 +45,27 @@ if ! gh api "repos/${login}/${repo}/pages" >/dev/null 2>&1; then
   gh api --method POST "repos/${login}/${repo}/pages" -f build_type=workflow >/dev/null
 fi
 
-git push -u github main
+git fetch github main
+remote_main="$(git rev-parse github/main)"
+if git merge-base --is-ancestor "$remote_main" HEAD 2>/dev/null; then
+  git push -u github HEAD:main
+else
+  # This checkout and github.com/<user>/latch do not share history.
+  # Put the current tree on top of that repo's main and fast-forward it.
+  tree="$(git rev-parse 'HEAD^{tree}')"
+  message="$(cat <<'EOF'
+Add Gather calls to the GitHub Pages site.
+
+Gather calls runs in the browser. Choose a city and a state, and Latch fills the call list from local websites. Arbiter writes the notes when its address is saved on the Calls page.
+EOF
+)"
+  if commit="$(git commit-tree "$tree" -p "$remote_main" -S -m "$message" 2>/dev/null)"; then
+    :
+  else
+    commit="$(git commit-tree "$tree" -p "$remote_main" -m "$message")"
+  fi
+  git push github "$commit:main"
+fi
 
 if [ "$repo" = "${login}.github.io" ]; then
   echo "https://${login}.github.io/"

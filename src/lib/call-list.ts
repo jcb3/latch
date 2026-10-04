@@ -316,6 +316,11 @@ export const lookedFine = [
   "The Cottage House Salon",
 ]
 
+export function preferredCallFilter(groups: readonly CallGroup[]): CallGroup | "all" {
+  const order: CallGroup[] = ["week", "phone", "domain"]
+  return order.find((group) => groups.includes(group)) ?? "all"
+}
+
 export const groupLabels: Record<CallGroup, string> = {
   week: "Call this week",
   domain: "The directory link doesn’t reach them",

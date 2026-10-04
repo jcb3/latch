@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { callProspects } from "../src/lib/call-list.ts"
+import { callProspects, preferredCallFilter } from "../src/lib/call-list.ts"
 
 test("every Youngsville prospect has a phone, a site, and a sentence you can say", () => {
   assert.ok(callProspects.length >= 20)
@@ -16,4 +16,11 @@ test("every Youngsville prospect has a phone, a site, and a sentence you can say
     assert.ok(item.address.includes("Youngsville"))
   }
   assert.equal(callProspects.filter((item) => item.group === "week").length, 5)
+})
+
+test("a gather opens the first group that has a call", () => {
+  assert.equal(preferredCallFilter(["domain", "domain"]), "domain")
+  assert.equal(preferredCallFilter(["phone", "week"]), "week")
+  assert.equal(preferredCallFilter(["phone"]), "phone")
+  assert.equal(preferredCallFilter([]), "all")
 })

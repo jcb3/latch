@@ -1,4 +1,5 @@
-import type { Lead, Numbers, PackageOffer, Stage, StudioState } from "@/lib/types"
+import type { CallGroup, CallProspect } from "@/lib/call-list"
+import type { GatheredCalls, Lead, Numbers, PackageOffer, Stage, StudioState } from "@/lib/types"
 
 export const defaultNumbers: Numbers = {
   monthlyTakeHome: 5800,
@@ -65,6 +66,7 @@ export const defaultState: StudioState = {
   leads: [],
   niche: defaultNiche,
   offer: defaultOffer,
+  gatheredCalls: null,
 }
 
 const stages: readonly Stage[] = ["new", "talking", "proposal", "won", "passed"]
@@ -164,6 +166,48 @@ export function mergeState(value: unknown): StudioState {
     leads: mergeLeads(raw.leads),
     niche: typeof raw.niche === "string" ? raw.niche : defaultNiche,
     offer: typeof raw.offer === "string" ? raw.offer : defaultOffer,
+    gatheredCalls: mergeGatheredCalls(raw.gatheredCalls),
+  }
+}
+
+const callGroups: readonly CallGroup[] = ["week", "domain", "phone"]
+
+function mergeGatheredCalls(value: unknown): GatheredCalls | null {
+  if (!value || typeof value !== "object") return null
+  const raw = value as Partial<GatheredCalls>
+  if (typeof raw.city !== "string" || typeof raw.state !== "string") return null
+  if (raw.via !== "arbiter" && raw.via !== "pages") return null
+  if (!Array.isArray(raw.prospects) || !Array.isArray(raw.lookedFine)) return null
+  const prospects = raw.prospects.flatMap((item) => {
+    if (!item || typeof item !== "object") return []
+    const prospect = item as Partial<CallProspect>
+    if (
+      typeof prospect.id !== "string" ||
+      typeof prospect.name !== "string" ||
+      typeof prospect.category !== "string" ||
+      typeof prospect.phone !== "string" ||
+      typeof prospect.address !== "string" ||
+      typeof prospect.website !== "string" ||
+      typeof prospect.saw !== "string" ||
+      typeof prospect.fix !== "string" ||
+      typeof prospect.opener !== "string" ||
+      !callGroups.includes(prospect.group as CallGroup)
+    ) {
+      return []
+    }
+    return [prospect as CallProspect]
+  })
+  const lookedFine = raw.lookedFine.filter((name): name is string => typeof name === "string")
+  if (prospects.length === 0 && lookedFine.length === 0) return null
+  return {
+    city: raw.city,
+    state: raw.state,
+    stateName: typeof raw.stateName === "string" ? raw.stateName : raw.state,
+    checkedOn: typeof raw.checkedOn === "string" ? raw.checkedOn : "",
+    via: raw.via,
+    arbiterNote: typeof raw.arbiterNote === "string" ? raw.arbiterNote : "",
+    prospects,
+    lookedFine,
   }
 }
 

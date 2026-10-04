@@ -1,7 +1,7 @@
 "use client"
 
 import { defaultState, mergeState } from "@/lib/defaults"
-import type { Lead, Numbers, PackageOffer, StudioState } from "@/lib/types"
+import type { GatheredCalls, Lead, Numbers, PackageOffer, StudioState } from "@/lib/types"
 import {
   createContext,
   useContext,
@@ -27,6 +27,8 @@ type StudioContextValue = {
   addLead: (lead: Omit<Lead, "id">) => void
   updateLead: (id: string, patch: Partial<Lead>) => void
   removeLead: (id: string) => void
+  setGatheredCalls: (calls: GatheredCalls) => void
+  clearGatheredCalls: () => void
   reset: () => void
 }
 
@@ -170,6 +172,12 @@ export function StudioProvider({ children }: { children: ReactNode }) {
           ...current,
           leads: current.leads.filter((lead) => lead.id !== id),
         }))
+      },
+      setGatheredCalls: (calls) => {
+        patchState((current) => ({ ...current, gatheredCalls: calls }))
+      },
+      clearGatheredCalls: () => {
+        patchState((current) => ({ ...current, gatheredCalls: null }))
       },
       reset: () => {
         try {

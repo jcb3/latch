@@ -1,3 +1,5 @@
+import type { CallProspect } from "@/lib/call-list"
+
 export type Stage = "new" | "talking" | "proposal" | "won" | "passed"
 
 export type Numbers = {
@@ -30,6 +32,17 @@ export type PackageOffer = {
   includes: string
 }
 
+export type GatheredCalls = {
+  city: string
+  state: string
+  stateName: string
+  checkedOn: string
+  via: "arbiter" | "pages"
+  arbiterNote: string
+  prospects: CallProspect[]
+  lookedFine: string[]
+}
+
 export type Lead = {
   id: string
   contact: string
@@ -47,4 +60,5 @@ export type StudioState = {
   leads: Lead[]
   niche: string
   offer: string
+  gatheredCalls: GatheredCalls | null
 }

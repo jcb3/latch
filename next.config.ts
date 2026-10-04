@@ -5,6 +5,7 @@ import type { NextConfig } from "next"
 const basePath = (process.env.BASE_PATH ?? "").replace(/\/$/, "")
 
 const nextConfig: NextConfig = {
+  // GitHub Pages publishes this static export. Gather calls runs in the browser.
   output: "export",
   trailingSlash: true,
   images: { unoptimized: true },
